@@ -77,9 +77,12 @@ public class ArticleParser {
                 article.appendChild(href);
 
                 // annotation elements
-                String annotationStr = articletxt.getByXPath("//b[contains(text(),'Аннотация')]"+
-                        "/following::text()[preceding::b[1][contains(text(),'Аннотация')] and not(parent::b)]").get(0).toString().trim();
-
+                String annotationStr = "";
+                List<Object> annotationlist = articletxt.getByXPath("//b[contains(text(),'Аннотация')]" +
+                        "/following::text()[preceding::b[1][contains(text(),'Аннотация')] and not(parent::b)]");
+                for (Object o: annotationlist){
+                    annotationStr += o.toString().trim();
+                }
 
                 //default
                 Element annotation_default = doc.createElement("annotation");
