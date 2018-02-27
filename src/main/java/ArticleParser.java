@@ -51,7 +51,7 @@ public class ArticleParser {
 
                 // title elements
 
-                String titleStr = articletxt.getFirstByXPath("//span[@class='red']/font/text()").toString();
+                String titleStr = articletxt.getFirstByXPath("//span[@class='red']/font/text()").toString().trim();
                 //default
                 Element title_default = doc.createElement("title");
                 title_default.setAttribute("type", "default");
@@ -77,9 +77,8 @@ public class ArticleParser {
                 article.appendChild(href);
 
                 // annotation elements
-                String annotationStr = articletxt.getFirstByXPath("//table//text()" +
-                        "[preceding-sibling::b[contains(text(), 'Аннотация') " +
-                        "and following-sibling::b[1]]][1]").toString();
+                String annotationStr = articletxt.getByXPath("//b[contains(text(),'Аннотация')]"+
+                        "/following::text()[preceding::b[1][contains(text(),'Аннотация')] and not(parent::b)]").get(0).toString().trim();
 
 
                 //default
@@ -108,7 +107,7 @@ public class ArticleParser {
                 for (String keywordStr : keywordstxt) {
 
                     Element keyword = doc.createElement("keyword");
-                    keyword.appendChild(doc.createTextNode(keywordStr));
+                    keyword.appendChild(doc.createTextNode(keywordStr.trim()));
                     keywords.appendChild(keyword);
                 }
 
@@ -135,11 +134,14 @@ public class ArticleParser {
     }
 
     public static String getPorterSting(String s) {
+        s = s.replaceAll("[^А-Яа-я\\s]", "");
         String[] s_arr = s.split(" ");
         s = "";
         Porter porter = new Porter();
         for (String string : s_arr) {
-            s += " " + porter.stem(string);
+            if (!string.equals("")) {
+                s += " " + porter.stem(string);
+            }
         }
         return s;
     }
@@ -150,7 +152,10 @@ public class ArticleParser {
         s = "";
         MyStem myStem = new MyStem();
         for (String string : s_arr) {
-            s += " " + myStem.stem(string);
+            if (!string.equals("")){
+                s += " " + myStem.stem(string);
+            }
+
         }
         return s;
     }

@@ -5,7 +5,7 @@ public class MyStem {
 
     public String stem(String str) throws IOException {
         Runtime rt = Runtime.getRuntime();
-        Process process = rt.exec("./mystem -ln");
+        Process process = rt.exec("./mystem -d -ln ");
         String result;
 
         try (InputStream in = process.getInputStream();
