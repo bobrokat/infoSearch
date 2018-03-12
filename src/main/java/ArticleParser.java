@@ -15,11 +15,16 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 public class ArticleParser {
 
+
     public static void main(String[] args) throws IOException {
+
+        InvertedIndex porterIndex = new InvertedIndex();
+        InvertedIndex mystemIndex = new InvertedIndex();
+
 
         String site = "http://www.mathnet.ru";
         String url = site +
@@ -33,16 +38,21 @@ public class ArticleParser {
 
         List<HtmlAnchor> links = page.getByXPath(GET_ALL_LINKS);
 
+        int i = 0;
+
         try {
 
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
-            // root element
+
             Document doc = docBuilder.newDocument();
+
+            // root element
             Element rootElement = doc.createElement("article_list");
             doc.appendChild(rootElement);
             for (HtmlAnchor link : links) {
+                i++;
                 HtmlPage articletxt = webClient.getPage(site + link.getHrefAttribute());
 
                 // article elements
@@ -63,12 +73,15 @@ public class ArticleParser {
                 title_porter.setAttribute("type", "porter");
                 title_porter.appendChild(doc.createTextNode(getPorterSting(titleStr)));
                 article.appendChild(title_porter);
+                porterIndex.getIndex(getPorterSting(titleStr), i);
+
 
                 //mystem
                 Element title_mystem = doc.createElement("title");
                 title_mystem.setAttribute("type", "mystem");
                 title_mystem.appendChild(doc.createTextNode(getMyStemSting(titleStr)));
                 article.appendChild(title_mystem);
+                mystemIndex.getIndex(getMyStemSting(titleStr), i);
 
 
                 // url elements
@@ -80,7 +93,7 @@ public class ArticleParser {
                 String annotationStr = "";
                 List<Object> annotationlist = articletxt.getByXPath("//b[contains(text(),'Аннотация')]" +
                         "/following::text()[preceding::b[1][contains(text(),'Аннотация')] and not(parent::b)]");
-                for (Object o: annotationlist){
+                for (Object o : annotationlist) {
                     annotationStr += o.toString().trim();
                 }
 
@@ -95,12 +108,14 @@ public class ArticleParser {
                 annotation_porter.appendChild(doc.createTextNode(getPorterSting(annotationStr)));
                 annotation_porter.setAttribute("type", "porter");
                 article.appendChild(annotation_porter);
+                porterIndex.getIndex(getPorterSting(annotationStr), i);
 
                 //mystem
                 Element annotation_mystem = doc.createElement("annotation");
                 annotation_mystem.appendChild(doc.createTextNode(getMyStemSting(annotationStr)));
                 annotation_mystem.setAttribute("type", "mystem");
                 article.appendChild(annotation_mystem);
+                mystemIndex.getIndex(getMyStemSting(annotationStr), i);
 
 
                 // keyword elements
@@ -117,17 +132,24 @@ public class ArticleParser {
 
             }
 
-            // write the content into xml file
+
+            porterIndex.createFile("porter");
+            mystemIndex.createFile("mystem");
+
+            // write the content into  xml file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.METHOD, "xml");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            //main
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File("task2.xml"));
+            StreamResult result = new StreamResult(new File("task3.xml"));
             transformer.transform(source, result);
 
+
             System.out.println("File saved!");
+
 
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -155,12 +177,19 @@ public class ArticleParser {
         s = "";
         MyStem myStem = new MyStem();
         for (String string : s_arr) {
-            if (!string.equals("")){
-                s += " " + myStem.stem(string);
-            }
+            if (!string.equals("")) {
+                String stemstr = myStem.stem(string);
+                if (stemstr.substring(stemstr.length() - 1).equals( "?")) {
+                    stemstr = stemstr.substring(0, stemstr.length() - 1);
+                    s += " " + stemstr;
+                }
 
+            }
         }
         return s;
     }
 }
+
+
+
 
