@@ -15,8 +15,7 @@ public class InvertedIndex {
 
 
     Set<String> set = new HashSet<>();
-    Map<String, List<Integer>> map = new HashMap<>();
-    Integer word_count = 0;
+    Map<String, List<Integer>> map = new TreeMap<>();
 
 
 

@@ -75,8 +75,5 @@ public class Porter {
         return word;
     }
 
-    public static void main(String[] args) {
-        Porter p = new Porter();
-        System.out.println(p.stem("в работе получены достаточные"));
-    }
+
 }

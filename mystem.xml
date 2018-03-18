@@ -1,29 +1,8 @@
 <index>
     <word>
-        <value>гиперповерхностеймерный</value>
+        <value>аффиннооднородный</value>
         <articles>
             <articleId>9</articleId>
-        </articles>
-        <article_count>1</article_count>
-    </word>
-    <word>
-        <value>вмерный</value>
-        <articles>
-            <articleId>9</articleId>
-        </articles>
-        <article_count>1</article_count>
-    </word>
-    <word>
-        <value>эндоморфизм</value>
-        <articles>
-            <articleId>7</articleId>
-        </articles>
-        <article_count>1</article_count>
-    </word>
-    <word>
-        <value>факторпространство</value>
-        <articles>
-            <articleId>8</articleId>
         </articles>
         <article_count>1</article_count>
     </word>
@@ -35,16 +14,9 @@
         <article_count>1</article_count>
     </word>
     <word>
-        <value>отделенность</value>
+        <value>бигруппоидный</value>
         <articles>
-            <articleId>5</articleId>
-        </articles>
-        <article_count>1</article_count>
-    </word>
-    <word>
-        <value>подалгебра</value>
-        <articles>
-            <articleId>3</articleId>
+            <articleId>2</articleId>
         </articles>
         <article_count>1</article_count>
     </word>
@@ -56,37 +28,30 @@
         <article_count>1</article_count>
     </word>
     <word>
-        <value>случаеразработанный</value>
+        <value>вмерный</value>
         <articles>
             <articleId>9</articleId>
         </articles>
         <article_count>1</article_count>
     </word>
     <word>
-        <value>централизатор</value>
+        <value>гиперповерхностеймерный</value>
         <articles>
-            <articleId>8</articleId>
+            <articleId>9</articleId>
         </articles>
         <article_count>1</article_count>
     </word>
     <word>
-        <value>псевдодифференциальный</value>
+        <value>гиперповерхность</value>
+        <articles>
+            <articleId>9</articleId>
+        </articles>
+        <article_count>1</article_count>
+    </word>
+    <word>
+        <value>гльдеразигмунд</value>
         <articles>
             <articleId>10</articleId>
-        </articles>
-        <article_count>1</article_count>
-    </word>
-    <word>
-        <value>дедекиндов</value>
-        <articles>
-            <articleId>7</articleId>
-        </articles>
-        <article_count>1</article_count>
-    </word>
-    <word>
-        <value>аффиннооднородный</value>
-        <articles>
-            <articleId>9</articleId>
         </articles>
         <article_count>1</article_count>
     </word>
@@ -98,14 +63,28 @@
         <article_count>1</article_count>
     </word>
     <word>
-        <value>конечномерный</value>
+        <value>дедекиндов</value>
         <articles>
-            <articleId>10</articleId>
+            <articleId>7</articleId>
         </articles>
         <article_count>1</article_count>
     </word>
     <word>
-        <value>хермандер</value>
+        <value>ешетка</value>
+        <articles>
+            <articleId>4</articleId>
+        </articles>
+        <article_count>1</article_count>
+    </word>
+    <word>
+        <value>коммутант</value>
+        <articles>
+            <articleId>8</articleId>
+        </articles>
+        <article_count>1</article_count>
+    </word>
+    <word>
+        <value>конечномерный</value>
         <articles>
             <articleId>10</articleId>
         </articles>
@@ -126,30 +105,23 @@
         <article_count>1</article_count>
     </word>
     <word>
-        <value>гльдеразигмунд</value>
+        <value>односвязный</value>
         <articles>
-            <articleId>10</articleId>
+            <articleId>8</articleId>
         </articles>
         <article_count>1</article_count>
     </word>
     <word>
-        <value>шрдингер</value>
+        <value>описаниеподалгебра</value>
         <articles>
-            <articleId>4</articleId>
+            <articleId>3</articleId>
         </articles>
         <article_count>1</article_count>
     </word>
     <word>
-        <value>бигруппоидный</value>
+        <value>отделенность</value>
         <articles>
-            <articleId>2</articleId>
-        </articles>
-        <article_count>1</article_count>
-    </word>
-    <word>
-        <value>спектрсохраняться</value>
-        <articles>
-            <articleId>4</articleId>
+            <articleId>5</articleId>
         </articles>
         <article_count>1</article_count>
     </word>
@@ -162,23 +134,30 @@
         <article_count>2</article_count>
     </word>
     <word>
-        <value>ешетка</value>
+        <value>подалгебра</value>
         <articles>
-            <articleId>4</articleId>
+            <articleId>3</articleId>
         </articles>
         <article_count>1</article_count>
     </word>
     <word>
-        <value>односвязный</value>
+        <value>псевдодифференциальный</value>
         <articles>
-            <articleId>8</articleId>
+            <articleId>10</articleId>
         </articles>
         <article_count>1</article_count>
     </word>
     <word>
-        <value>гиперповерхность</value>
+        <value>случаеразработанный</value>
         <articles>
             <articleId>9</articleId>
+        </articles>
+        <article_count>1</article_count>
+    </word>
+    <word>
+        <value>спектрсохраняться</value>
+        <articles>
+            <articleId>4</articleId>
         </articles>
         <article_count>1</article_count>
     </word>
@@ -190,16 +169,37 @@
         <article_count>1</article_count>
     </word>
     <word>
-        <value>коммутант</value>
+        <value>факторпространство</value>
         <articles>
             <articleId>8</articleId>
         </articles>
         <article_count>1</article_count>
     </word>
     <word>
-        <value>описаниеподалгебра</value>
+        <value>хермандер</value>
         <articles>
-            <articleId>3</articleId>
+            <articleId>10</articleId>
+        </articles>
+        <article_count>1</article_count>
+    </word>
+    <word>
+        <value>централизатор</value>
+        <articles>
+            <articleId>8</articleId>
+        </articles>
+        <article_count>1</article_count>
+    </word>
+    <word>
+        <value>шрдингер</value>
+        <articles>
+            <articleId>4</articleId>
+        </articles>
+        <article_count>1</article_count>
+    </word>
+    <word>
+        <value>эндоморфизм</value>
+        <articles>
+            <articleId>7</articleId>
         </articles>
         <article_count>1</article_count>
     </word>

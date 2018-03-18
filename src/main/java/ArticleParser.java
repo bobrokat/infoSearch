@@ -3,14 +3,14 @@ import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
@@ -47,6 +47,7 @@ public class ArticleParser {
 
 
             Document doc = docBuilder.newDocument();
+
 
             // root element
             Element rootElement = doc.createElement("article_list");
@@ -150,11 +151,19 @@ public class ArticleParser {
 
             System.out.println("File saved!");
 
+            typePhrase();
+
 
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
-        } catch (TransformerException tfe) {
-            tfe.printStackTrace();
+            // } catch (TransformerException tfe) {
+            //   tfe.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (TransformerConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
+            e.printStackTrace();
         }
     }
 
@@ -179,7 +188,7 @@ public class ArticleParser {
         for (String string : s_arr) {
             if (!string.equals("")) {
                 String stemstr = myStem.stem(string);
-                if (stemstr.substring(stemstr.length() - 1).equals( "?")) {
+                if (stemstr.substring(stemstr.length() - 1).equals("?")) {
                     stemstr = stemstr.substring(0, stemstr.length() - 1);
                     s += " " + stemstr;
                 }
@@ -188,6 +197,129 @@ public class ArticleParser {
         }
         return s;
     }
+
+    public static void typePhrase() throws IOException, ParserConfigurationException, SAXException {
+        System.out.println("write phrase");
+        Scanner scanner = new Scanner(System.in);
+        String phrase = scanner.nextLine();
+        String[] words = phrase.trim().split(" ");
+        String typeStr = "";
+
+        boolean flag = false;
+        while (flag == false) {
+            System.out.println("write type: " +
+                    "porter or " +
+                    "mystem");
+            typeStr = scanner.nextLine();
+
+            if (typeStr.equals("porter") || typeStr.equals("mystem")) {
+                flag = true;
+            } else {
+                System.out.println("write correct type");
+            }
+
+        }
+
+        Map<Integer, List<Integer>> parsed = parsePhrase(words, typeStr);
+        Map<Integer, List<Integer>> parsedsorted = new TreeMap<>(parsed);
+        Object[] keys = parsedsorted.keySet().toArray();
+
+
+        List<Integer> list1 = parsedsorted.get(keys[0]);
+        List<Integer> list2 = parsedsorted.get(keys[1]);
+        List<Integer> result = intersection(list1, list2);
+        for (int i = 2; i < keys.length; i++) {
+            result = intersection(result, parsedsorted.get(keys[i]));
+        }
+        for (Integer value : result) {
+            System.out.println(value);
+        }
+
+    }
+
+
+    public static Map<Integer, List<Integer>> parsePhrase(String[] words, String type) throws IOException, ParserConfigurationException, SAXException {
+
+        Map<Integer, List<Integer>> map = new LinkedHashMap<>();
+        for (String word : words) {
+            word = word.trim();
+            boolean needsign = false;
+            if (word.charAt(0) == '-') {
+                needsign = true;
+            }
+            if (type.equals("porter")) {
+                word = getPorterSting(word);
+            } else if (type.equals("mystem")) {
+                word = getMyStemSting(word);
+            }
+            word = word.trim();
+            if (needsign){
+                word = "-" + word;
+            }
+
+            List<Integer> list = findWord(word, type);
+            map.put(list.size(), list);
+        }
+        return map;
+    }
+
+    //find ids of documents where id word
+    public static List<Integer> findWord(String word, String type) throws IOException, ParserConfigurationException, SAXException {
+        List<Integer> ids = new ArrayList<>();
+        File inputFile = new File(type + ".xml");
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(inputFile);
+        doc.getDocumentElement().normalize();
+        NodeList nList = doc.getElementsByTagName("word");
+        boolean need = false;
+        if (word.charAt(0) == '-') {
+            word = word.substring(1);
+            need = true;
+            for (int k = 0; k < 10; k++) {
+                ids.add(k);
+            }
+        }
+        for (int i = 0; i < nList.getLength(); i++) {
+            Node wordNode = nList.item(i);
+            Element wordElement = (Element) wordNode;
+            String value = wordElement.getElementsByTagName("value").item(0).getTextContent();
+
+            if (word.equals(value)) {
+                Element articlesElement = (Element) wordElement.getElementsByTagName("articles").item(0);
+                NodeList articleids = articlesElement.getElementsByTagName("articleId");
+                for (int j = 0; j < articleids.getLength(); j++) {
+                    Node ArticledNode = articleids.item(j);
+                    Element articleElement = (Element) ArticledNode;
+                    if (need) {
+                        ids.remove(Integer.valueOf(articleElement.getTextContent()));
+                    } else {
+                        ids.add(Integer.valueOf(articleElement.getTextContent()));
+                    }
+
+                }
+
+            }
+
+        }
+        return ids;
+    }
+
+
+    //find intersection in list
+    public static <T> List<T> intersection(List<T> list1, List<T> list2) {
+        List<T> list = new ArrayList<T>();
+
+        for (T t : list1) {
+            if (list2.contains(t)) {
+                list.add(t);
+            }
+        }
+
+        return list;
+    }
+
+
 }
 
 
