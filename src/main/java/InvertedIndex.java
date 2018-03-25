@@ -19,6 +19,7 @@ public class InvertedIndex {
 
 
 
+
     public void getIndex(String textStr, int i){
         String[] s_arr = textStr.split(" ");
         set.addAll(Arrays.asList(s_arr));

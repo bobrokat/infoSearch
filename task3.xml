@@ -1,5 +1,6 @@
 <article_list>
     <article>
+        <id>1</id>
         <title type="default">О числе моделей теорий локально свободных алгебр</title>
         <title type="porter">о числ модел теор локальн свободн алгебр</title>
         <title type="mystem"/>
@@ -18,6 +19,7 @@
         </keywords>
     </article>
     <article>
+        <id>2</id>
         <title type="default">Бигруппоидные инварианты для зацеплений в проективном пространстве</title>
         <title type="porter">бигруппоидн инвариант для зацеплен в проектном пространств</title>
         <title type="mystem">бигруппоидный</title>
@@ -40,6 +42,7 @@
         </keywords>
     </article>
     <article>
+        <id>3</id>
         <title type="default">Структура подалгебр алгебры Теплица, неподвижных относительно конечной группы
             автоморфизмов
         </title>
@@ -63,6 +66,7 @@
         </keywords>
     </article>
     <article>
+        <id>4</id>
         <title type="default">О компактном возмущении двухчастичного оператора Шрёдингера на решетке</title>
         <title type="porter">о компактн возмущен двухчастичн оператор шрдингер на решетк</title>
         <title type="mystem">двухчастичный шрдингер</title>
@@ -88,6 +92,7 @@
         </keywords>
     </article>
     <article>
+        <id>5</id>
         <title type="default">Начально-граничная задача для параболо-гиперболического уравнения с нагруженными
             слагаемыми
         </title>
@@ -117,6 +122,7 @@
         </keywords>
     </article>
     <article>
+        <id>6</id>
         <title type="default">Нелокальная краевая задача с условием Бицадзе–Самарского для уравнения
             параболо-гиперболического типа второго рода
         </title>
@@ -146,6 +152,7 @@
         </keywords>
     </article>
     <article>
+        <id>7</id>
         <title type="default">Сепарабельные модули без кручения с</title>
         <title type="porter">сепарабельн модул без кручен с</title>
         <title type="mystem"/>
@@ -163,6 +170,7 @@
         </keywords>
     </article>
     <article>
+        <id>8</id>
         <title type="default">О фактор-пространствах компактных групп Ли по подгруппам коранга единица</title>
         <title type="porter">о факторпространств компактн групп ли по подгрупп коранг единиц</title>
         <title type="mystem">факторпространство коранг</title>
@@ -182,6 +190,7 @@
         </keywords>
     </article>
     <article>
+        <id>9</id>
         <title type="default">О полном списке аффинно-однородных поверхностей (</title>
         <title type="porter">о полн списк аффиннооднородн поверхн</title>
         <title type="mystem">аффиннооднородный</title>
@@ -217,6 +226,7 @@
         </keywords>
     </article>
     <article>
+        <id>10</id>
         <title type="default">Об ограниченности псевдодифференциальных операторов в пространствах Гёльдера–Зигмунда с
             переменным порядком гладкости
         </title>
