@@ -1,0 +1,36 @@
+word: данные
+document ID: 1 tf-idf: 0.0
+document ID: 2 tf-idf: 0.0
+document ID: 3 tf-idf: 0.06931471805599453
+document ID: 4 tf-idf: 0.0
+document ID: 5 tf-idf: 0.06931471805599453
+document ID: 6 tf-idf: 0.06931471805599453
+document ID: 7 tf-idf: 0.06931471805599453
+document ID: 8 tf-idf: 0.0
+document ID: 9 tf-idf: 0.0
+document ID: 10 tf-idf: 0.0
+score: 0.2772588722239781
+word: доказать
+document ID: 1 tf-idf: 0.0
+document ID: 2 tf-idf: 0.0
+document ID: 3 tf-idf: 0.0
+document ID: 4 tf-idf: 0.0
+document ID: 5 tf-idf: 0.10986122886681099
+document ID: 6 tf-idf: 0.10986122886681099
+document ID: 7 tf-idf: 0.0
+document ID: 8 tf-idf: 0.0
+document ID: 9 tf-idf: 0.0
+document ID: 10 tf-idf: 0.10986122886681099
+score: 0.32958368660043297
+word: задачи
+document ID: 1 tf-idf: 0.0
+document ID: 2 tf-idf: 0.0
+document ID: 3 tf-idf: 0.0
+document ID: 4 tf-idf: 0.0
+document ID: 5 tf-idf: 0.43944491546724396
+document ID: 6 tf-idf: 0.21972245773362198
+document ID: 7 tf-idf: 0.0
+document ID: 8 tf-idf: 0.0
+document ID: 9 tf-idf: 0.10986122886681099
+document ID: 10 tf-idf: 0.0
+score: 0.7690286020676769

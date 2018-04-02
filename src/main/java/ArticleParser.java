@@ -14,6 +14,7 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -25,144 +26,144 @@ public class ArticleParser {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Do you want to parse articles? Yes/No");
-         String answer1 = scanner.nextLine();
-        if (answer1.equals("Yes")){
+        String answer1 = scanner.nextLine();
+        if (answer1.equals("Yes")) {
 
 
-        InvertedIndex porterIndex = new InvertedIndex();
-        InvertedIndex mystemIndex = new InvertedIndex();
+            InvertedIndex porterIndex = new InvertedIndex();
+            InvertedIndex mystemIndex = new InvertedIndex();
 
 
-        String site = "http://www.mathnet.ru";
-        String url = site +
-                "/php/archive.phtml?jrnid=ivm&wshow=issue&year=2015&volume=&volume_alt=&issue=6&issue_alt=&option_lang=rus";
-        String GET_ALL_LINKS = "//td[@width='90%']/a[@class='SLink']";
+            String site = "http://www.mathnet.ru";
+            String url = site +
+                    "/php/archive.phtml?jrnid=ivm&wshow=issue&year=2015&volume=&volume_alt=&issue=6&issue_alt=&option_lang=rus";
+            String GET_ALL_LINKS = "//td[@width='90%']/a[@class='SLink']";
 
-        WebClient webClient = new WebClient();
-        webClient.getOptions().setCssEnabled(false);
-        webClient.getOptions().setJavaScriptEnabled(false);
-        HtmlPage page = webClient.getPage(url);
+            WebClient webClient = new WebClient();
+            webClient.getOptions().setCssEnabled(false);
+            webClient.getOptions().setJavaScriptEnabled(false);
+            HtmlPage page = webClient.getPage(url);
 
-        List<HtmlAnchor> links = page.getByXPath(GET_ALL_LINKS);
+            List<HtmlAnchor> links = page.getByXPath(GET_ALL_LINKS);
 
-        int i = 0;
-
-
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            int i = 0;
 
 
-        Document doc = docBuilder.newDocument();
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
 
-        // корневой элемент
-        Element rootElement = doc.createElement("article_list");
-        doc.appendChild(rootElement);
-        for (HtmlAnchor link : links) {
-            i++;
-            HtmlPage articletxt = webClient.getPage(site + link.getHrefAttribute());
-
-            // статья
-            Element article = doc.createElement("article");
-            rootElement.appendChild(article);
-            Element id = doc.createElement("id");
-
-            id.appendChild(doc.createTextNode(String.valueOf(i)));
-            article.appendChild(id);
-
-            // название
-
-            String titleStr = articletxt.getFirstByXPath("//span[@class='red']/font/text()").toString().trim();
-            //default
-            Element title_default = doc.createElement("title");
-            title_default.setAttribute("type", "default");
-            title_default.appendChild(doc.createTextNode(titleStr));
-            article.appendChild(title_default);
-
-            //porter
-            Element title_porter = doc.createElement("title");
-            title_porter.setAttribute("type", "porter");
-            title_porter.appendChild(doc.createTextNode(getPorterSting(titleStr)));
-            article.appendChild(title_porter);
-            porterIndex.getIndex(getPorterSting(titleStr), i);
+            Document doc = docBuilder.newDocument();
 
 
-            //mystem
-            Element title_mystem = doc.createElement("title");
-            title_mystem.setAttribute("type", "mystem");
-            title_mystem.appendChild(doc.createTextNode(getMyStemSting(titleStr)));
-            article.appendChild(title_mystem);
-            mystemIndex.getIndex(getMyStemSting(titleStr), i);
+            // корневой элемент
+            Element rootElement = doc.createElement("article_list");
+            doc.appendChild(rootElement);
+            for (HtmlAnchor link : links) {
+                i++;
+                HtmlPage articletxt = webClient.getPage(site + link.getHrefAttribute());
+
+                // статья
+                Element article = doc.createElement("article");
+                rootElement.appendChild(article);
+                Element id = doc.createElement("id");
+
+                id.appendChild(doc.createTextNode(String.valueOf(i)));
+                article.appendChild(id);
+
+                // название
+
+                String titleStr = articletxt.getFirstByXPath("//span[@class='red']/font/text()").toString().trim();
+                //default
+                Element title_default = doc.createElement("title");
+                title_default.setAttribute("type", "default");
+                title_default.appendChild(doc.createTextNode(titleStr));
+                article.appendChild(title_default);
+
+                //porter
+                Element title_porter = doc.createElement("title");
+                title_porter.setAttribute("type", "porter");
+                title_porter.appendChild(doc.createTextNode(getPorterSting(titleStr)));
+                article.appendChild(title_porter);
+                porterIndex.getIndex(getPorterSting(titleStr), i);
 
 
-            // url
-            Element href = doc.createElement("url");
-            href.appendChild(doc.createTextNode(site + link.getHrefAttribute()));
-            article.appendChild(href);
+                //mystem
+                Element title_mystem = doc.createElement("title");
+                title_mystem.setAttribute("type", "mystem");
+                title_mystem.appendChild(doc.createTextNode(getMyStemSting(titleStr)));
+                article.appendChild(title_mystem);
+                mystemIndex.getIndex(getMyStemSting(titleStr), i);
 
-            // аннотация
-            String annotationStr = "";
-            List<Object> annotationlist = articletxt.getByXPath("//b[contains(text(),'Аннотация')]" +
-                    "/following::text()[preceding::b[1][contains(text(),'Аннотация')] and not(parent::b)]");
-            for (Object o : annotationlist) {
-                annotationStr += o.toString().trim();
+
+                // url
+                Element href = doc.createElement("url");
+                href.appendChild(doc.createTextNode(site + link.getHrefAttribute()));
+                article.appendChild(href);
+
+                // аннотация
+                String annotationStr = "";
+                List<Object> annotationlist = articletxt.getByXPath("//b[contains(text(),'Аннотация')]" +
+                        "/following::text()[preceding::b[1][contains(text(),'Аннотация')] and not(parent::b)]");
+                for (Object o : annotationlist) {
+                    annotationStr += o.toString().trim();
+                }
+
+                //default
+                Element annotation_default = doc.createElement("annotation");
+                annotation_default.appendChild(doc.createTextNode(annotationStr));
+                annotation_default.setAttribute("type", "default");
+                article.appendChild(annotation_default);
+
+                //porter
+                Element annotation_porter = doc.createElement("annotation");
+                annotation_porter.appendChild(doc.createTextNode(getPorterSting(annotationStr)));
+                annotation_porter.setAttribute("type", "porter");
+                article.appendChild(annotation_porter);
+                porterIndex.getIndex(getPorterSting(annotationStr), i);
+
+                //mystem
+                Element annotation_mystem = doc.createElement("annotation");
+                annotation_mystem.appendChild(doc.createTextNode(getMyStemSting(annotationStr)));
+                annotation_mystem.setAttribute("type", "mystem");
+                article.appendChild(annotation_mystem);
+                mystemIndex.getIndex(getMyStemSting(annotationStr), i);
+
+
+                // ключевые слова
+                String[] keywordstxt = articletxt.getFirstByXPath("//i[preceding-sibling::b[contains(text(), 'Ключевые')]]/text()").toString().split(",");
+                Element keywords = doc.createElement("keywords");
+                article.appendChild(keywords);
+                for (String keywordStr : keywordstxt) {
+
+                    Element keyword = doc.createElement("keyword");
+                    keyword.appendChild(doc.createTextNode(keywordStr.trim()));
+                    keywords.appendChild(keyword);
+                }
+
+
             }
 
-            //default
-            Element annotation_default = doc.createElement("annotation");
-            annotation_default.appendChild(doc.createTextNode(annotationStr));
-            annotation_default.setAttribute("type", "default");
-            article.appendChild(annotation_default);
 
-            //porter
-            Element annotation_porter = doc.createElement("annotation");
-            annotation_porter.appendChild(doc.createTextNode(getPorterSting(annotationStr)));
-            annotation_porter.setAttribute("type", "porter");
-            article.appendChild(annotation_porter);
-            porterIndex.getIndex(getPorterSting(annotationStr), i);
+            porterIndex.createFile("porter");
+            mystemIndex.createFile("mystem");
 
-            //mystem
-            Element annotation_mystem = doc.createElement("annotation");
-            annotation_mystem.appendChild(doc.createTextNode(getMyStemSting(annotationStr)));
-            annotation_mystem.setAttribute("type", "mystem");
-            article.appendChild(annotation_mystem);
-            mystemIndex.getIndex(getMyStemSting(annotationStr), i);
+            // запись в xml
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File("task3.xml"));
+            transformer.transform(source, result);
 
 
-            // ключевые слова
-            String[] keywordstxt = articletxt.getFirstByXPath("//i[preceding-sibling::b[contains(text(), 'Ключевые')]]/text()").toString().split(",");
-            Element keywords = doc.createElement("keywords");
-            article.appendChild(keywords);
-            for (String keywordStr : keywordstxt) {
-
-                Element keyword = doc.createElement("keyword");
-                keyword.appendChild(doc.createTextNode(keywordStr.trim()));
-                keywords.appendChild(keyword);
-            }
-
+            System.out.println("File saved!");
 
         }
-
-
-        porterIndex.createFile("porter");
-        mystemIndex.createFile("mystem");
-
-        // запись в xml
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-
-        DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(new File("task3.xml"));
-        transformer.transform(source, result);
-
-
-        System.out.println("File saved!");
-
-         }
-         // пересечние
+        // пересечние
         System.out.println("Do you want to find intersection? Yes/No");
         String answer2 = scanner.nextLine();
         if (answer2.equals("Yes")) {
@@ -180,9 +181,21 @@ public class ArticleParser {
                     "mystem");
             String typeStr = scanner.nextLine();
             if (typeStr.equals("porter") || typeStr.equals("mystem")) {
-                for(int j = 1; j <= 10; j++ ){
-                    findTfIdf(word, typeStr, j);
+                FileWriter writer = new FileWriter("task5.txt", true);
+                writer.write("word: ");
+                writer.write(word);
+                writer.append('\n');
+                writer.flush();
+
+                double score = 0;
+                for (int j = 1; j <= 10; j++) {
+                    score += findTfIdf(word, typeStr, j);
                 }
+                writer = new FileWriter("task5.txt", true);
+                writer.write("score: ");
+                writer.write(String.valueOf(score));
+                writer.append('\n');
+                writer.flush();
 
 
             }
@@ -205,6 +218,7 @@ public class ArticleParser {
         }
         return s;
     }
+
     //делаем mystem строку
     public static String getMyStemSting(String s) throws IOException {
         s = s.replaceAll("[^А-Яа-я\\s]", "");
@@ -223,16 +237,20 @@ public class ArticleParser {
         }
         return s;
     }
+
     //ввод фразы для поиска перечечений
     public static void typePhrase() throws IOException, ParserConfigurationException, SAXException {
+        FileWriter writer = new FileWriter("task4.txt", true);
         System.out.println("write phrase");
         Scanner scanner = new Scanner(System.in);
         String phrase = scanner.nextLine();
+        writer.write("phrase : ");
+        writer.write(phrase);
+        writer.append('\n');
         String[] words = phrase.trim().split(" ");
-        if (words.length <= 1){
+        if (words.length <= 1) {
             System.out.println("Please type more than 1 word");
-        }
-        else {
+        } else {
             String typeStr = "";
 
             boolean flag = false;
@@ -261,9 +279,15 @@ public class ArticleParser {
             for (int i = 2; i < keys.length; i++) {
                 result = intersection(result, parsedsorted.get(keys[i]));
             }
+            writer.write("intersection : ");
             for (Integer value : result) {
+                writer.write(value.toString());
+                writer.append(' ');
                 System.out.println(value);
+
             }
+            writer.append('\n');
+            writer.flush();
         }
 
     }
@@ -372,7 +396,8 @@ public class ArticleParser {
     }
 
     // ищем tf-idf для введенного слова в определенном документе
-    public static void findTfIdf(String word, String type, Integer docID) throws ParserConfigurationException, IOException, SAXException {
+    public static double findTfIdf(String word, String type, Integer docID) throws ParserConfigurationException, IOException, SAXException {
+        FileWriter writer = new FileWriter("task5.txt", true);
         File inputFile = new File(type + ".xml");
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -383,8 +408,7 @@ public class ArticleParser {
         Integer docCount = 10;
         if (type.equals("porter")) {
             word = getPorterSting(word).trim();
-        }
-        else if(type.equals("mystem")){
+        } else if (type.equals("mystem")) {
             word = getMyStemSting(word).trim();
         }
         Integer wordcount = getHowMuch(docID, word, type);
@@ -400,6 +424,10 @@ public class ArticleParser {
         }
         double tf_idf = tf_idf(wordcount, docCount, docsWithWord);
         System.out.println("document ID: " + docID + " tf-idf: " + tf_idf);
+        writer.write("document ID: " + docID.toString() + " tf-idf: " + tf_idf);
+        writer.append('\n');
+        writer.flush();
+        return tf_idf;
 
 
     }
@@ -419,24 +447,23 @@ public class ArticleParser {
             Node articleNode = nList.item(i);
             Element articleElement = (Element) articleNode;
             String id = articleElement.getElementsByTagName("id").item(0).getTextContent();
-            if(Integer.parseInt(id) == docID){
+            if (Integer.parseInt(id) == docID) {
                 if (type.equals("porter")) {
                     title = articleElement.getElementsByTagName("title").item(1).getTextContent();
                     annotation = articleElement.getElementsByTagName("annotation").item(1).getTextContent();
-                }
-                else if(type.equals("mystem")){
+                } else if (type.equals("mystem")) {
                     title = articleElement.getElementsByTagName("title").item(2).getTextContent();
                     annotation = articleElement.getElementsByTagName("annotation").item(2).getTextContent();
                 }
                 String[] arr = title.split(" ");
-                for(String s : arr){
-                    if(s.equals(word)){
+                for (String s : arr) {
+                    if (s.equals(word)) {
                         result++;
                     }
                 }
                 arr = annotation.split(" ");
-                for(String s : arr){
-                    if(s.equals(word)){
+                for (String s : arr) {
+                    if (s.equals(word)) {
                         result++;
                     }
                 }

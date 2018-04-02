@@ -1,0 +1,6 @@
+phrase : авторы алгебры
+intersection : 9 
+phrase : возникает вид 
+intersection : 5 
+phrase : -группы данных
+intersection : 5 6 7
