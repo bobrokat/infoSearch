@@ -1,3 +1,5 @@
+import Jama.Matrix;
+import Jama.SingularValueDecomposition;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -167,7 +169,9 @@ public class ArticleParser {
         System.out.println("Do you want to find intersection? Yes/No");
         String answer2 = scanner.nextLine();
         if (answer2.equals("Yes")) {
-            typePhrase();
+            System.out.println("write phrase");
+            String phrase = scanner.nextLine();
+            typePhrase(phrase);
         }
         //tf-idf
 
@@ -175,34 +179,60 @@ public class ArticleParser {
         String answer3 = scanner.nextLine();
         if (answer3.equals("Yes")) {
             System.out.println("write word");
-            String word = scanner.nextLine();
+            String words = scanner.nextLine();
             System.out.println("write type: " +
                     "porter or " +
                     "mystem");
             String typeStr = scanner.nextLine();
             if (typeStr.equals("porter") || typeStr.equals("mystem")) {
                 FileWriter writer = new FileWriter("task5.txt", true);
-                writer.write("word: ");
-                writer.write(word);
+                writer.write("phrase: ");
+                writer.write(words);
                 writer.append('\n');
                 writer.flush();
 
-                double score = 0;
-                for (int j = 1; j <= 10; j++) {
-                    score += findTfIdf(word, typeStr, j);
+
+                double score;
+
+                String[] wordsArr = words.split(" ");
+                for (String word : wordsArr) {
+                    writer = new FileWriter("task5.txt", true);
+                    writer.write("word: ");
+                    writer.write(word);
+                    writer.append('\n');
+                    writer.flush();
+
+                    score = 0;
+                    writer = new FileWriter("task5.txt", true);
+                    ArrayList<Integer> intesections = typePhrase(words);
+                    for (Integer docId : intesections) {
+                        score += findTfIdf(word, typeStr, docId);
+                    }
+                    writer.write("score: ");
+                    writer.write(String.valueOf(score));
+                    writer.append('\n');
+                    writer.flush();
                 }
-                writer = new FileWriter("task5.txt", true);
-                writer.write("score: ");
-                writer.write(String.valueOf(score));
-                writer.append('\n');
-                writer.flush();
 
 
             }
 
         }
 
-
+        System.out.println("Do you want to find Latent Semantic Indexing? Yes/No");
+        String answer4 = scanner.nextLine();
+        if (answer4.equals("Yes")) {
+            System.out.println("write query");
+            String query = scanner.nextLine();
+            FileWriter writer = new FileWriter("task6.txt", true);
+            writer.write("query: ");
+            writer.write(query);
+            writer.append('\n');
+            writer.flush();
+            Matrix a = getAMatrix();
+            Matrix q = getQMarix(query);
+            getLSI(a, q);
+        }
     }
 
     //делаем porter строку
@@ -239,11 +269,10 @@ public class ArticleParser {
     }
 
     //ввод фразы для поиска перечечений
-    public static void typePhrase() throws IOException, ParserConfigurationException, SAXException {
+    public static ArrayList<Integer> typePhrase(String phrase) throws IOException, ParserConfigurationException, SAXException {
         FileWriter writer = new FileWriter("task4.txt", true);
-        System.out.println("write phrase");
+        ArrayList<Integer> intersections = new ArrayList();
         Scanner scanner = new Scanner(System.in);
-        String phrase = scanner.nextLine();
         writer.write("phrase : ");
         writer.write(phrase);
         writer.append('\n');
@@ -284,11 +313,13 @@ public class ArticleParser {
                 writer.write(value.toString());
                 writer.append(' ');
                 System.out.println(value);
+                intersections.add(value);
 
             }
             writer.append('\n');
             writer.flush();
         }
+        return intersections;
 
     }
 
@@ -403,7 +434,6 @@ public class ArticleParser {
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(inputFile);
         doc.getDocumentElement().normalize();
-        NodeList nList = doc.getElementsByTagName("word");
         Integer docsWithWord = 0;
         Integer docCount = 10;
         if (type.equals("porter")) {
@@ -413,19 +443,11 @@ public class ArticleParser {
         }
         Integer wordcount = getHowMuch(docID, word, type);
 
-        for (int i = 0; i < nList.getLength(); i++) {
-            Node wordNode = nList.item(i);
-            Element wordElement = (Element) wordNode;
-            String value = wordElement.getElementsByTagName("value").item(0).getTextContent();
-            if (word.equals(value)) {
-                docsWithWord = Integer.valueOf(wordElement.getElementsByTagName("article_count").item(0).getTextContent());
-                break;
-            }
-        }
+        docsWithWord = getDocsWithWord(word);
         double tf_idf = tf_idf(wordcount, docCount, docsWithWord);
-        System.out.println("document ID: " + docID + " tf-idf: " + tf_idf);
-        writer.write("document ID: " + docID.toString() + " tf-idf: " + tf_idf);
-        writer.append('\n');
+        // System.out.println("document ID: " + docID + " tf-idf: " + tf_idf);
+        // writer.write("document ID: " + docID.toString() + " tf-idf: " + tf_idf);
+        // writer.append('\n');
         writer.flush();
         return tf_idf;
 
@@ -472,6 +494,148 @@ public class ArticleParser {
 
         }
         return result;
+    }
+
+    //создание документа
+    public static Document getDoc(String type) throws ParserConfigurationException, IOException, SAXException {
+
+        File inputFile = new File(type + ".xml");
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(inputFile);
+        doc.getDocumentElement().normalize();
+        return doc;
+    }
+
+    // получение всех уникальных слов
+    public static List<String> getAllWords() throws ParserConfigurationException, IOException, SAXException {
+        List<String> list = new ArrayList<>();
+        Document doc = getDoc("porter");
+        NodeList nList = doc.getElementsByTagName("word");
+        for (int i = 0; i < nList.getLength(); i++) {
+            Node wordNode = nList.item(i);
+            Element wordElement = (Element) wordNode;
+            String value = wordElement.getElementsByTagName("value").item(0).getTextContent();
+            list.add(value);
+        }
+        return list;
+    }
+
+    // поиск числа документов содержащих слово
+    public static int getDocsWithWord(String word) throws IOException, SAXException, ParserConfigurationException {
+        Integer docsWithWord = 0;
+        Document doc = getDoc("porter");
+        NodeList nList = doc.getElementsByTagName("word");
+        for (int i = 0; i < nList.getLength(); i++) {
+            Node wordNode = nList.item(i);
+            Element wordElement = (Element) wordNode;
+            String value = wordElement.getElementsByTagName("value").item(0).getTextContent();
+            if (word.equals(value)) {
+                docsWithWord = Integer.valueOf(wordElement.getElementsByTagName("article_count").item(0).getTextContent());
+                break;
+            }
+        }
+        return docsWithWord;
+
+    }
+
+    // полчение матрицы А
+    public static Matrix getAMatrix() throws ParserConfigurationException, IOException, SAXException {
+
+        List<String> nList = getAllWords();
+        double[][] arr = new double[nList.size()][10];
+        for (int i = 0; i < nList.size(); i++) {
+            for (int j = 0; j < 10; j++) {
+                arr[i][j] = findTfIdf(nList.get(i), "porter", j);
+            }
+
+        }
+        Matrix a = new Matrix(arr);
+        return a;
+    }
+
+    //получение матрицы q
+    public static Matrix getQMarix(String query) throws IOException, SAXException, ParserConfigurationException {
+        query = getPorterSting(query);
+        String[] arr = query.split(" ");
+        ArrayList<String> querylist = new ArrayList<>();
+        querylist.addAll(Arrays.asList(arr));
+        Collections.sort(querylist);
+        List<String> nList = getAllWords();
+        double[][] matrixArr = new double[1][nList.size()];
+
+
+        for (int i = 0; i < nList.size(); i++) {
+            String word = nList.get(i);
+            if (querylist.contains(word)) {
+                int count = 0;
+                for (String w : querylist) {
+                    if (w.equals(word)) {
+                        count++;
+                    }
+                }
+                double localTf = tf(count, querylist.size());
+                int docsWithWord = getDocsWithWord(word);
+                double localIdf = idf(10, docsWithWord);
+
+                matrixArr[0][i] = localTf * localIdf;
+            }
+        }
+        return new Matrix(matrixArr);
+    }
+
+    // вычисление LSI
+    public static void getLSI(Matrix a, Matrix q) throws IOException {
+        FileWriter writer = new FileWriter("task6.txt", true);
+        SingularValueDecomposition sin = new SingularValueDecomposition(a);
+        Matrix u = sin.getU();
+        Matrix s = sin.getS();
+
+        Matrix v = sin.getV();
+
+
+        Matrix uK = u.getMatrix(0, u.getRowDimension() - 1, 0, 5);
+        Matrix sK = s.getMatrix(0, s.getRowDimension() - 1, 0, 5);
+        sK = sK.getMatrix(0, 5, 0, sK.getColumnDimension() - 1);
+        Matrix vK = v.getMatrix(0, v.getRowDimension() - 1, 0, 5);
+
+
+        ArrayList<double[]> list = new ArrayList<>();
+        for (int i = 0; i < vK.getRowDimension(); i++) {
+            double[] row = vK.getMatrix(i, i, 0, vK.getColumnDimension() - 1).getRowPackedCopy();
+            list.add(row);
+        }
+
+        Matrix newQ = q.times(uK).times(sK.inverse());
+
+
+        for (int i = 0; i < vK.getRowDimension(); i++) {
+            double sim;
+            double simNum = 0;
+            double simDen = 0;
+            for (int j = 0; j < newQ.getColumnDimension(); j++) {
+                simDen += Math.pow(newQ.get(0, j), 2);
+            }
+            simDen = Math.sqrt(simDen);
+            double simDenVk = 0;
+            for (int j = 0; j < vK.getColumnDimension(); j++) {
+                simNum += vK.get(i, j) * newQ.get(0, j);
+                simDenVk += Math.pow(vK.get(i, j), 2);
+            }
+            simDen = simDen * Math.sqrt(simDenVk);
+            if (simDen == 0) {
+                sim = 0;
+            } else {
+                sim = simNum / simDen;
+            }
+            System.out.printf("%.6f", sim);
+            System.out.println();
+            writer.write(String.format("%.6f", sim));
+            writer.append('\n');
+
+
+        }
+        writer.flush();
     }
 }
 
