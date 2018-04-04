@@ -192,27 +192,41 @@ public class ArticleParser {
                 writer.flush();
 
 
-                double score;
+                //double score;
 
                 String[] wordsArr = words.split(" ");
+                Double[] scores = new Double[10];
+                for (int i = 0; i < scores.length; i++) {
+                    scores[i] = Double.valueOf(0);
+                }
                 for (String word : wordsArr) {
                     writer = new FileWriter("task5.txt", true);
                     writer.write("word: ");
                     writer.write(word);
                     writer.append('\n');
                     writer.flush();
+                    //ArrayList<Integer> intesections = typePhrase(words);
+                    for (int i = 0; i < 10; i++) {
+                        scores[i] += findTfIdf(word, typeStr, i);
 
-                    score = 0;
-                    writer = new FileWriter("task5.txt", true);
-                    ArrayList<Integer> intesections = typePhrase(words);
-                    for (Integer docId : intesections) {
-                        score += findTfIdf(word, typeStr, docId);
                     }
-                    writer.write("score: ");
-                    writer.write(String.valueOf(score));
-                    writer.append('\n');
-                    writer.flush();
+
                 }
+                Map<Integer, Double> map = new HashMap<>();
+                for (int i = 0; i < scores.length; i++) {
+                    map.put(i, scores[i]);
+                }
+                Map<Integer, Double> sortedmap = sortByComparator(map, false);
+
+
+                writer = new FileWriter("task5.txt", true);
+                for (Map.Entry<Integer, Double> entry: sortedmap.entrySet()) {
+                    if (entry.getValue() != 0) {
+                        writer.write("Score for doc №" + String.valueOf(entry.getKey()) + " : " + String.valueOf(entry.getValue()));
+                        writer.append('\n');
+                    }
+                }
+                writer.flush();
 
 
             }
@@ -445,9 +459,9 @@ public class ArticleParser {
 
         docsWithWord = getDocsWithWord(word);
         double tf_idf = tf_idf(wordcount, docCount, docsWithWord);
-        // System.out.println("document ID: " + docID + " tf-idf: " + tf_idf);
-        // writer.write("document ID: " + docID.toString() + " tf-idf: " + tf_idf);
-        // writer.append('\n');
+        System.out.println("document ID: " + docID + " tf-idf: " + tf_idf);
+        writer.write("document ID: " + docID.toString() + " tf-idf: " + tf_idf);
+        writer.append('\n');
         writer.flush();
         return tf_idf;
 
@@ -637,8 +651,34 @@ public class ArticleParser {
         }
         writer.flush();
     }
-}
 
+    private static Map<Integer, Double> sortByComparator(Map<Integer, Double> unsortMap, final boolean order) {
+
+        List<Map.Entry<Integer, Double>> list = new LinkedList<Map.Entry<Integer, Double>>(unsortMap.entrySet());
+
+        // Sorting the list based on values
+        Collections.sort(list, new Comparator<Map.Entry<Integer, Double>>() {
+            public int compare(Map.Entry<Integer, Double> o1,
+                               Map.Entry<Integer, Double> o2) {
+                if (order) {
+                    return o1.getValue().compareTo(o2.getValue());
+                } else {
+                    return o2.getValue().compareTo(o1.getValue());
+
+                }
+            }
+        });
+
+        // Maintaining insertion order with the help of LinkedList
+        Map<Integer, Double> sortedMap = new LinkedHashMap<Integer, Double>();
+        for (Map.Entry<Integer, Double> entry : list)
+        {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
+    }
+}
 
 
 

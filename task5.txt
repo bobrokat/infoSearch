@@ -1,25 +1,80 @@
 phrase: данные задачи
 word: данные
+document ID: 0 tf-idf: 0.0
+document ID: 1 tf-idf: 0.0
+document ID: 2 tf-idf: 0.0
+document ID: 3 tf-idf: 0.06931471805599453
+document ID: 4 tf-idf: 0.0
 document ID: 5 tf-idf: 0.06931471805599453
 document ID: 6 tf-idf: 0.06931471805599453
-score: 0.13862943611198905
+document ID: 7 tf-idf: 0.06931471805599453
+document ID: 8 tf-idf: 0.0
+document ID: 9 tf-idf: 0.0
 word: задачи
+document ID: 0 tf-idf: 0.0
+document ID: 1 tf-idf: 0.0
+document ID: 2 tf-idf: 0.0
+document ID: 3 tf-idf: 0.0
+document ID: 4 tf-idf: 0.0
 document ID: 5 tf-idf: 0.43944491546724396
 document ID: 6 tf-idf: 0.21972245773362198
-score: 0.6591673732008659
+document ID: 7 tf-idf: 0.0
+document ID: 8 tf-idf: 0.0
+document ID: 9 tf-idf: 0.10986122886681099
+Score for doc №5 : 0.5087596335232385
+Score for doc №6 : 0.2890371757896165
+Score for doc №9 : 0.10986122886681099
+Score for doc №3 : 0.06931471805599453
+Score for doc №7 : 0.06931471805599453
 phrase: авторы алгебры
 word: авторы
-document ID: 9 tf-idf: 0.2302585092994046
-score: 0.2302585092994046
-word: алгебры
-document ID: 9 tf-idf: 0.21972245773362198
-score: 0.21972245773362198
-phrase: значение классов
-word: значение
-document ID: 5 tf-idf: 0.16094379124341004
-document ID: 10 tf-idf: 0.0
-score: 0.16094379124341004
-word: классов
+document ID: 0 tf-idf: 0.0
+document ID: 1 tf-idf: 0.0
+document ID: 2 tf-idf: 0.0
+document ID: 3 tf-idf: 0.0
+document ID: 4 tf-idf: 0.0
 document ID: 5 tf-idf: 0.0
-document ID: 10 tf-idf: 0.06931471805599453
-score: 0.06931471805599453
+document ID: 6 tf-idf: 0.0
+document ID: 7 tf-idf: 0.0
+document ID: 8 tf-idf: 0.0
+document ID: 9 tf-idf: 0.2302585092994046
+word: алгебры
+document ID: 0 tf-idf: 0.0
+document ID: 1 tf-idf: 0.10986122886681099
+document ID: 2 tf-idf: 0.0
+document ID: 3 tf-idf: 0.3295836866004329
+document ID: 4 tf-idf: 0.0
+document ID: 5 tf-idf: 0.0
+document ID: 6 tf-idf: 0.0
+document ID: 7 tf-idf: 0.0
+document ID: 8 tf-idf: 0.0
+document ID: 9 tf-idf: 0.21972245773362198
+Score for doc №9 : 0.4499809670330266
+Score for doc №3 : 0.3295836866004329
+Score for doc №1 : 0.10986122886681099
+phrase: это является
+word: это
+document ID: 0 tf-idf: 0.0
+document ID: 1 tf-idf: 0.0
+document ID: 2 tf-idf: 0.10986122886681099
+document ID: 3 tf-idf: 0.0
+document ID: 4 tf-idf: 0.10986122886681099
+document ID: 5 tf-idf: 0.0
+document ID: 6 tf-idf: 0.0
+document ID: 7 tf-idf: 0.0
+document ID: 8 tf-idf: 0.0
+document ID: 9 tf-idf: 0.10986122886681099
+word: является
+document ID: 0 tf-idf: 0.0
+document ID: 1 tf-idf: 0.0
+document ID: 2 tf-idf: 0.16094379124341004
+document ID: 3 tf-idf: 0.0
+document ID: 4 tf-idf: 0.0
+document ID: 5 tf-idf: 0.0
+document ID: 6 tf-idf: 0.0
+document ID: 7 tf-idf: 0.0
+document ID: 8 tf-idf: 0.0
+document ID: 9 tf-idf: 0.16094379124341004
+Score for doc №2 : 0.270805020110221
+Score for doc №9 : 0.270805020110221
+Score for doc №4 : 0.10986122886681099
