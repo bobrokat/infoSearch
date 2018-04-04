@@ -77,4 +77,13 @@ document ID: 8 tf-idf: 0.0
 document ID: 9 tf-idf: 0.16094379124341004
 Score for doc №2 : 0.270805020110221
 Score for doc №9 : 0.270805020110221
-Score for doc №4 : 0.10986122886681099
+Score for doc №4 : 0.10986122886681099phrase: в работе
+word: в
+word: работе
+Score for doc №1 : 0.06931471805599453
+Score for doc №3 : 0.06931471805599453
+Score for doc №5 : 0.06931471805599453
+Score for doc №7 : 0.06931471805599453
+phrase: в работе
+word: в
+word: работе

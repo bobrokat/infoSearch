@@ -448,7 +448,7 @@ public class ArticleParser {
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(inputFile);
         doc.getDocumentElement().normalize();
-        Integer docsWithWord = 0;
+        Integer docsWithWord;
         Integer docCount = 10;
         if (type.equals("porter")) {
             word = getPorterSting(word).trim();
@@ -459,9 +459,9 @@ public class ArticleParser {
 
         docsWithWord = getDocsWithWord(word);
         double tf_idf = tf_idf(wordcount, docCount, docsWithWord);
-        System.out.println("document ID: " + docID + " tf-idf: " + tf_idf);
-        writer.write("document ID: " + docID.toString() + " tf-idf: " + tf_idf);
-        writer.append('\n');
+       // System.out.println("document ID: " + docID + " tf-idf: " + tf_idf);
+        //writer.write("document ID: " + docID.toString() + " tf-idf: " + tf_idf);
+       // writer.append('\n');
         writer.flush();
         return tf_idf;
 
@@ -565,6 +565,7 @@ public class ArticleParser {
 
         }
         Matrix a = new Matrix(arr);
+        a.print(2, 3);
         return a;
     }
 
@@ -614,12 +615,6 @@ public class ArticleParser {
         Matrix vK = v.getMatrix(0, v.getRowDimension() - 1, 0, 5);
 
 
-        ArrayList<double[]> list = new ArrayList<>();
-        for (int i = 0; i < vK.getRowDimension(); i++) {
-            double[] row = vK.getMatrix(i, i, 0, vK.getColumnDimension() - 1).getRowPackedCopy();
-            list.add(row);
-        }
-
         Matrix newQ = q.times(uK).times(sK.inverse());
 
 
@@ -644,7 +639,7 @@ public class ArticleParser {
             }
             System.out.printf("%.6f", sim);
             System.out.println();
-            writer.write(String.format("%.6f", sim));
+            writer.write("sim (q, d"+ String.valueOf(i) + ") :" + String.format("%.6f", sim));
             writer.append('\n');
 
 
